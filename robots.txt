@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cozyswap1.github.io/Cozyswap/sitemap.xml
