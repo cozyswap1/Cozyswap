@@ -156,7 +156,7 @@
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div><strong>Swap</strong><div class="small">Token to token</div></div>
-            <div style="text-align:right"><button id="toLiquidity" class="active-btn">Add Liquidity</button> <button id="toStaking" class="ghost">Staking</button></div>
+            <div style="text-align:right"><button id="toLiquidity" class="active-btn">Add Liquidity</button> <button id="toStaking" class="active-btn">Staking</button></div>
           </div>
 
           <div style="margin-top:12px">
@@ -809,10 +809,10 @@ txHashEl.innerHTML = `
 
   // === Custom Navigation URLs ===
 const addLiquidityUrl = 'https://cozyswap2.github.io/Cozyswap/'; // 🔗 ganti dengan link GitHub kamu
-const stakingUrl = 'https'; // 🔗 kalau nanti kamu punya halaman staking
+const stakingUrl = 'https://cozyswap3.github.io/CozySwap/'; // 🔗 kalau nanti kamu punya halaman staking
 
 document.getElementById('toLiquidity').onclick = () => {
-  if (!addLiquidityUrl.startsWith('http')) {
+  if (!addLiquidityUrl.startsWith('https')) {
     alert('Add Liquidity link invalid.');
   } else {
     window.location.href = addLiquidityUrl; // buka di tab yang sama, biar smooth
