@@ -1,0 +1,11 @@
+# security.txt untuk Cozyswap
+# Format standar sesuai RFC 9116
+
+Contact: mailto:cozyswap2@gmail.com
+Encryption: https://cozyswap1.github.io/Cozyswap/assets/pgpkey.txt
+Acknowledgements: https://cozyswap1.github.io/Cozyswap/security
+Preferred-Languages: en
+Canonical: https://cozyswap1.github.io/Cozyswap/security.txt
+Policy: https://cozyswap1.github.io/Cozyswap/security-policy
+Hiring: https://cozyswap1.github.io/Cozyswap/jobs
+Expires: 2026-12-31T23:59:59Z
