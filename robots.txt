@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Allow: /.well-known/
 
 Sitemap: https://cozyswap1.github.io/Cozyswap/sitemap.xml
