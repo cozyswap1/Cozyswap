@@ -261,12 +261,53 @@
   const ethers = await loadEthers();
   const { utils, BigNumber, providers, Contract } = ethers;
 
-  const RPC = 'https://rpc.plasma.to';
+  const RPC = 'https://plasma-mainnet.g.alchemy.com/v2/MuLXFm60Tsz3ntyrSC1O4';
   const CHAIN_ID = 9745;
   const CHAIN_ID_HEX = '0x2611';
   const ROUTER = '0x89E695B38610e78a77Fb310458Dfd855505AD239';
   const FACTORY = '0xa252e44D3478CeBb1a3D59C9146CD860cb09Ec93';
   const WXPL = '0x6100E367285b01F48D07953803A2d8dCA5D19873';
+  
+// ===== Provider Setup =====
+  let provider;
+  let signer;
+  let userAddress;
+
+  // Ganti ke Alchemy Plasma RPC
+  const RPC = 'https://plasma-mainnet.g.alchemy.com/v2/MuLXFm60Tsz3ntyrSC1O4';
+  const plasmaProvider = new providers.JsonRpcProvider(RPC);
+
+  if (window.ethereum) {
+    try {
+      // Coba koneksi ke wallet user (MetaMask, TrustWallet, dll)
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      provider = new providers.Web3Provider(window.ethereum);
+      signer = provider.getSigner();
+      userAddress = await signer.getAddress();
+      console.log('🦊 Wallet connected:', userAddress);
+    } catch (err) {
+      console.warn('⚠️ Wallet connection rejected by user, fallback to RPC.');
+      provider = plasmaProvider;
+    }
+  } else {
+    console.log('💫 No wallet detected, using Alchemy Plasma RPC.');
+    provider = plasmaProvider;
+  }
+
+  // Tes koneksi jaringan
+  try {
+    const network = await provider.getNetwork();
+    console.log(`🌍 Connected to network: ${network.name || 'Plasma'} (Chain ID: ${network.chainId})`);
+  } catch (err) {
+    console.error('❌ Failed to fetch network info:', err);
+  }
+
+  // ===== Contoh load contract router =====
+  const ROUTER_ABI = [
+    'function getAmountsOut(uint256,address[]) view returns (uint256[])',
+  ];
+  const router = new Contract(ROUTER, ROUTER_ABI, provider);
+  console.log('🏭 Router loaded:', router.address);
 
   const ERC20 = [
     'function decimals() view returns (uint8)',
