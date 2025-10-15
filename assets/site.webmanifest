@@ -1,21 +1,21 @@
 {
   "name": "CozySwap",
   "short_name": "Cozy",
+  "description": "Plasma Swap DEX",
   "icons": [
     {
-      "src": "/https://cozyswap1.github.io/CozySwap/web-app-manifest-192x192.png",
+      "src": "https://cozyswap1.github.io/Cozyswap/assets/favicon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     },
     {
-      "src": "/https://cozyswap1.github.io/CozySwap/web-app-manifest-512x512.png",
+      "src": "https://cozyswap1.github.io/Cozyswap/assets/favicon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#667eea",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "standalone",
+  "start_url": "/"
 }
