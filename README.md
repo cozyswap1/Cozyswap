@@ -1,23 +1,24 @@
-# 🌀 Cozyswap — Decentralized Exchange on Plasma Chain
+# 🌀 CozySwap — Decentralized Exchange on Plasma Chain
 
 ![CozySwap Logo](https://github.com/cozyswap1/Cozyswap/blob/main/assets/web-app-manifest-512x512.png?raw=true)
 
-**Cozyswap** is a decentralized exchange (DEX) built on **Plasma Chain (Chain ID: 9745)**.  
+**CozySwap** is a decentralized exchange (DEX) built on **Plasma Chain (Chain ID: 9745)**.  
 It allows users to **swap tokens instantly**, **add liquidity**, and **earn rewards** in **COZY Token** — all through a simple, lightweight, and fast HTML interface.
 
 🌐 **Live App:** [https://cozyswap1.github.io/Cozyswap/](https://cozyswap1.github.io/Cozyswap/)  
 📄 **License:** MIT  
 📬 **Contact:** [cozyswap2@gmail.com](mailto:cozyswap2@gmail.com)  
-🔐 **Security Policy:** [security.txt](https://cozyswap1.github.io/Cozyswap/security.txt)
-📄 **White paper:** [https://bit.ly/CozySwap_Whitepaper]
+🔐 **Security Policy:** [security.txt](https://cozyswap1.github.io/Cozyswap/security.txt)  
+📘 **Whitepaper:** [https://bit.ly/CozySwap_Whitepaper](https://bit.ly/CozySwap_Whitepaper)
+
 ---
 
 ## ⚡ Features
 
-- 🪙 **Instant Token Swaps** — exchange tokens directly on Plasma Chain.
-- 💧 **Add Liquidity** — provide liquidity to earn trading fees.
-- 🎁 **Earn COZY Token** — stake and liquidity providers receive COZY as rewards.
-- 🪄 **WalletConnect / MetaMask Injected Support** — connect your wallet easily.
+- 🪙 **Instant Token Swaps** — exchange tokens directly on Plasma Chain.  
+- 💧 **Add Liquidity** — provide liquidity to earn trading fees.  
+- 🎁 **Earn COZY Token** — stake and liquidity providers receive COZY as rewards.  
+- 🪄 **WalletConnect / MetaMask Support** — connect your wallet easily.  
 - ⚙️ **Lightweight Pure HTML UI** — no frameworks, minimal latency, fully decentralized.
 
 ---
@@ -30,15 +31,15 @@ It allows users to **swap tokens instantly**, **add liquidity**, and **earn rewa
 | 🏭 Factory      | `0xa252e44D3478CeBb1a3D59C9146CD860cb09Ec93` |
 | 💠 COZY Token   | `0x06e2ef46662834f4e42dbf9ff9222b077c57df5c` |
 
-> ⚠️ Always verify contracts before interacting. Use block explorer or verified ABI for safety.
+> ⚠️ Always verify contracts before interacting. Use the block explorer or verified ABI for safety.
 
 ---
 
 ## 🏗️ Tech Stack
 
-- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
-- **Blockchain Interface:** Injected Web3 (MetaMask / WalletConnect)
-- **Hosting:** GitHub Pages
+- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)  
+- **Blockchain Interface:** Injected Web3 (MetaMask / WalletConnect)  
+- **Hosting:** GitHub Pages  
 - **Chain:** Plasma Chain (ID: 9745)
 
 ---
@@ -50,6 +51,7 @@ To create a **simple, fast, and intuitive DEX** that avoids unnecessary complexi
 ---
 
 ## 📁 Repository Structure
+
 Cozyswap/
 │
 ├── assets/ # images, icons, PGP key, etc.
@@ -62,6 +64,7 @@ Cozyswap/
 ├── robots.txt
 ├── sitemap.xml
 └── README.md # project overview (this file)
+
 
 ---
 
@@ -83,36 +86,42 @@ This project is licensed under the **MIT License** — you are free to use, modi
 
 ## 💬 Acknowledgements
 
-- Plasma Chain Network
-- GitHub Pages Hosting
-- Web3.js & MetaMask community
-
----
+- Plasma Chain Network  
+- GitHub Pages Hosting  
+- Web3.js & MetaMask Community  
 
 > 🧩 *Cozyswap is an open-source decentralized exchange — always verify contracts and URLs before use.*
 
+---
 
-🌐 Social Media
+## 🌐 Social Media
 
 Stay connected and follow our updates:
-~
-🐦 X (Twitter): https://x.com/CozySwap
 
-💬 Telegram: https://t.me/CozySwap
+🐦 **X (Twitter):** [https://x.com/CozySwap](https://x.com/CozySwap)  
+💬 **Telegram:** [https://t.me/CozySwap](https://t.me/CozySwap)  
+🧑‍💻 **GitHub:** [https://github.com/cozyswap1](https://github.com/cozyswap1)
 
-🧑‍💻 GitHub: https://github.com/cozyswap1
+---
 
-💜 Acknowledgements
+## 💜 Thanks & Donate
 
-Thanks to the Plasma Chain community and all contributors supporting the open-source ecosystem.
-
+Thanks to the Plasma Chain community and all contributors supporting the open-source ecosystem.  
 Built with ❤️ for decentralized finance (DeFi).
 
-Donate : 0x99ac4108B5a10812A1A7aDdC36cB5Eea0a5e020e
+**Donate:** `0x99ac4108B5a10812A1A7aDdC36cB5Eea0a5e020e`
 
+---
 
+## ⚖️ Legal & Compliance
 
+By using **CozySwap** or interacting with its smart contracts, you agree to the following:
 
+- [Terms of Use](https://cozyswap1.github.io/Cozyswap/terms.html)  
+- [Privacy Policy](https://cozyswap1.github.io/Cozyswap/privacy.html)  
+- [Disclaimer](https://cozyswap1.github.io/Cozyswap/disclaimer.html)
 
+CozySwap is a decentralized exchange (DEX) powered by **Plasma Chain**.  
+All transactions occur directly on-chain without intermediaries. Users are responsible for their own wallet security and actions performed via smart contracts.
 
-
+> Stay Cozy & Swap Responsibly 💧
