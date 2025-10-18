@@ -336,40 +336,8 @@
   ];
 
   
-<!-- ======= Token Select UI ======= -->
-<div class="token-select">
-  <img id="from-logo" src="assets/xpl.png" width="24" height="24" style="vertical-align:middle;border-radius:50%;margin-right:6px;">
-  <select id="fromTokenSel"></select>
-</div>
-
-<div class="token-select" style="margin-top:10px;">
-  <img id="to-logo" src="assets/cozy.png" width="24" height="24" style="vertical-align:middle;border-radius:50%;margin-right:6px;">
-  <select id="toTokenSel"></select>
-</div>
-
-<script>
-(async () => {
-  // =========================
-  // TOKEN MANAGEMENT SECTION
-  // =========================
-
+// Token management
   const TOKENS_KEY = 'cozy_tokens_v1';
-  const TOKEN_LIST_URL = './tokens.json'; // file di root
-
-  async function fetchTokenList() {
-    try {
-      const res = await fetch(TOKEN_LIST_URL);
-      if (res.ok) {
-        const list = await res.json();
-        console.log('Loaded tokens from tokens.json', list);
-        return list;
-      }
-    } catch (err) {
-      console.warn('Token list fetch failed:', err);
-    }
-    return null;
-  }
-
   function loadTokens() {
     try {
       const raw = localStorage.getItem(TOKENS_KEY);
@@ -383,15 +351,6 @@
   }
 
   let tokens = loadTokens();
-
-  async function initTokens() {
-    const externalList = await fetchTokenList();
-    if (externalList && Array.isArray(externalList)) {
-      tokens = externalList;
-      saveTokens(tokens);
-    }
-    refreshSelectors();
-  }
 
   function refreshSelectors() {
     fromTokenSel.innerHTML = '';
@@ -407,31 +366,15 @@
       o2.text = t.symbol;
       toTokenSel.appendChild(o2);
     });
-
     fromTokenSel.value = tokens[0].address;
     toTokenSel.value = tokens[1].address;
-    updateTokenIcons();
   }
 
-  function updateTokenIcons() {
-    const fromLogo = document.getElementById('from-logo');
-    const toLogo = document.getElementById('to-logo');
+  refreshSelectors();
 
-    const from = tokens.find(t => t.address === fromTokenSel.value);
-    const to = tokens.find(t => t.address === toTokenSel.value);
-
-    if (from && from.logoURI) fromLogo.src = from.logoURI;
-    if (to && to.logoURI) toLogo.src = to.logoURI;
+  function setStatus(s) {
+    if (statusEl) statusEl.innerText = s;
   }
-
-  fromTokenSel.addEventListener('change', updateTokenIcons);
-  toTokenSel.addEventListener('change', updateTokenIcons);
-
-  // Jalankan pertama kali
-  initTokens();
-})();
-</script>
-
 
   // FIXED WALLET CONNECTION
   async function ensureProvider() {
