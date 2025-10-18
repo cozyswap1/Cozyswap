@@ -335,45 +335,84 @@
     {symbol: 'USDT', address: '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb'}
   ];
 
-  // Token management
-  const TOKENS_KEY = 'cozy_tokens_v1';
-  function loadTokens() {
-    try {
-      const raw = localStorage.getItem(TOKENS_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) {}
-    return DEFAULTS.slice();
+  // =========================
+// TOKEN MANAGEMENT SECTION
+// =========================
+
+const TOKENS_KEY = 'cozy_tokens_v1';
+const TOKEN_LIST_URL = './tokens.json'; // file di root
+
+// 🔹 Ambil daftar token dari tokens.json
+async function fetchTokenList() {
+  try {
+    const res = await fetch(TOKEN_LIST_URL);
+    if (res.ok) {
+      const list = await res.json();
+      console.log('Loaded tokens from tokens.json', list);
+      return list;
+    }
+  } catch (err) {
+    console.warn('Token list fetch failed:', err);
   }
+  return null;
+}
 
-  function saveTokens(list) {
-    localStorage.setItem(TOKENS_KEY, JSON.stringify(list));
+// 🔹 Muat token dari localStorage (jika user pernah nambah manual)
+function loadTokens() {
+  try {
+    const raw = localStorage.getItem(TOKENS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return DEFAULTS.slice();
+}
+
+// 🔹 Simpan token list ke localStorage
+function saveTokens(list) {
+  localStorage.setItem(TOKENS_KEY, JSON.stringify(list));
+}
+
+// 🔹 Token aktif saat ini
+let tokens = loadTokens();
+
+// 🔹 Inisialisasi token (ambil dari tokens.json jika ada)
+async function initTokens() {
+  const externalList = await fetchTokenList();
+  if (externalList && Array.isArray(externalList)) {
+    tokens = externalList;
+    saveTokens(tokens);
   }
-
-  let tokens = loadTokens();
-
-  function refreshSelectors() {
-    fromTokenSel.innerHTML = '';
-    toTokenSel.innerHTML = '';
-    tokens.forEach(t => {
-      const o1 = document.createElement('option');
-      o1.value = t.address;
-      o1.text = t.symbol;
-      fromTokenSel.appendChild(o1);
-
-      const o2 = document.createElement('option');
-      o2.value = t.address;
-      o2.text = t.symbol;
-      toTokenSel.appendChild(o2);
-    });
-    fromTokenSel.value = tokens[0].address;
-    toTokenSel.value = tokens[1].address;
-  }
-
   refreshSelectors();
+}
 
-  function setStatus(s) {
-    if (statusEl) statusEl.innerText = s;
-  }
+// 🔹 Refresh dropdown token di UI
+function refreshSelectors() {
+  fromTokenSel.innerHTML = '';
+  toTokenSel.innerHTML = '';
+
+  tokens.forEach(t => {
+    const o1 = document.createElement('option');
+    o1.value = t.address;
+    o1.text = t.symbol;
+    fromTokenSel.appendChild(o1);
+
+    const o2 = document.createElement('option');
+    o2.value = t.address;
+    o2.text = t.symbol;
+    toTokenSel.appendChild(o2);
+  });
+
+  // Set default pilihan awal
+  fromTokenSel.value = tokens[0].address;
+  toTokenSel.value = tokens[1].address;
+}
+
+// 🔹 Update status di UI
+function setStatus(s) {
+  if (statusEl) statusEl.innerText = s;
+}
+
+// 🔹 Jalankan pertama kali
+initTokens();
 
   // FIXED WALLET CONNECTION
   async function ensureProvider() {
