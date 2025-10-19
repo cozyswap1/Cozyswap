@@ -134,90 +134,116 @@
     .smallbtn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;color:var(--muted);cursor:pointer}
     .txhash{word-break:break-all;color:var(--muted);margin-top:8px}
 
-    /* Token Selector Styles */
-    .token-select-container {
-      position: relative;
-      width: 100%;
-    }
+ /* Token Selector Styles */
+.token-select-container {
+  position: relative;
+  width: 100%;
+}
 
-    .selected-token {
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      cursor: pointer;
-      background: transparent;
-      transition: all 0.2s;
-      min-height: 40px;
-    }
+.selected-token {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.2s;
+  min-height: 40px;
+}
 
-    .selected-token:hover {
-      border-color: rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.02);
-    }
+.selected-token:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+}
 
-    .token-logo-sm {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin-right: 8px;
-      object-fit: cover;
-    }
+.token-logo-sm {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 8px;
+  object-fit: cover;
+}
 
-    .token-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #111216;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      max-height: 300px;
-      overflow-y: auto;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      margin-top: 5px;
-    }
+.token-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #111216;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  margin-top: 5px;
+}
 
-    .token-option {
-      display: flex;
-      align-items: center;
-      padding: 10px 12px;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
+.token-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* tombol copy di kanan */
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background 0.2s ease;
+}
 
-    .token-option:last-child {
-      border-bottom: none;
-    }
+.token-option:last-child {
+  border-bottom: none;
+}
 
-    .token-option:hover {
-      background: rgba(255,255,255,0.05);
-    }
+.token-option:hover {
+  background: rgba(255,255,255,0.05);
+}
 
-    .token-info {
-      flex: 1;
-      margin-left: 8px;
-    }
+.token-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  margin-left: 8px;
+}
 
-    .token-symbol {
-      font-weight: 500;
-      display: block;
-      font-size: 14px;
-    }
+.token-symbol {
+  font-weight: 500;
+  display: block;
+  font-size: 14px;
+}
 
-    .token-name {
-      font-size: 11px;
-      color: #9aa0a6;
-      display: block;
-    }
+.token-name {
+  font-size: 11px;
+  color: #9aa0a6;
+  display: block;
+}
 
-    .dropdown-arrow {
-      margin-left: auto;
-      font-size: 10px;
-      color: #9aa0a6;
+.copy-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.1s ease;
+  margin-left: auto;
+}
+
+.copy-btn:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+.dropdown-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: #9aa0a6;
+}
+
     }
   </style>
 </head>
@@ -502,7 +528,9 @@
       fromDropdown.innerHTML = '';
       toDropdown.innerHTML = '';
 
-      // Create token options untuk kedua dropdown
+      // ======================================================
+// ✅ Membuat token options untuk kedua dropdown + tombol salin
+// ======================================================
 tokens.forEach(token => {
   // Untuk FROM dropdown
   const fromOption = document.createElement('div');
@@ -519,39 +547,37 @@ tokens.forEach(token => {
     <button class="copy-btn" title="Salin alamat token" onclick="event.stopPropagation(); copyAddress('${token.address}')">📋</button>
   `;
   fromOption.onclick = (e) => {
-    e.stopPropagation();
-    selectToken('from', token);
+    // Hanya pilih token kalau yang diklik bukan tombol salin
+    if (!e.target.classList.contains("copy-btn")) {
+      e.stopPropagation();
+      selectToken('from', token);
+    }
   };
   fromDropdown.appendChild(fromOption);
 
   // Untuk TO dropdown
-  const toOption = fromOption.cloneNode(true);
+  const toOption = document.createElement('div');
+  toOption.className = 'token-option';
+  toOption.innerHTML = `
+    <img src="${token.logoURI || getDefaultLogo(token.symbol)}" 
+         alt="${token.symbol}" 
+         class="token-logo-sm"
+         onerror="this.src='${getDefaultLogo(token.symbol)}'">
+    <div class="token-info">
+      <span class="token-symbol">${token.symbol}</span>
+      <span class="token-name">${token.name || token.symbol} Token</span>
+    </div>
+    <button class="copy-btn" title="Salin alamat token" onclick="event.stopPropagation(); copyAddress('${token.address}')">📋</button>
+  `;
   toOption.onclick = (e) => {
-    e.stopPropagation();
-    selectToken('to', token);
+    if (!e.target.classList.contains("copy-btn")) {
+      e.stopPropagation();
+      selectToken('to', token);
+    }
   };
   toDropdown.appendChild(toOption);
 });
 
-        // Untuk TO dropdown
-        const toOption = document.createElement('div');
-        toOption.className = 'token-option';
-        toOption.innerHTML = `
-          <img src="${token.logoURI || getDefaultLogo(token.symbol)}" 
-               alt="${token.symbol}" 
-               class="token-logo-sm"
-               onerror="this.src='${getDefaultLogo(token.symbol)}'">
-          <div class="token-info">
-            <span class="token-symbol">${token.symbol}</span>
-            <span class="token-name">${token.name || token.symbol} Token</span>
-          </div>
-        `;
-        toOption.onclick = (e) => {
-          e.stopPropagation();
-          selectToken('to', token);
-        };
-        toDropdown.appendChild(toOption);
-      });
 
       // Set default tokens
       selectToken('from', selectedFromToken);
@@ -1049,6 +1075,39 @@ tokens.forEach(token => {
     }
 
   })();
+    function copyAddress(addr) {
+  if (!addr) return showToast("⚠️ Alamat token tidak ditemukan", true);
+  navigator.clipboard.writeText(addr)
+    .then(() => showToast("✅ Alamat token berhasil disalin"))
+    .catch(() => showToast("❌ Gagal menyalin alamat token", true));
+}
+
+function showToast(message, isError = false) {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.style.position = "fixed";
+  toast.style.bottom = "24px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%)";
+  toast.style.padding = "10px 18px";
+  toast.style.background = isError ? "rgba(220, 53, 69, 0.9)" : "rgba(40, 167, 69, 0.9)";
+  toast.style.color = "#fff";
+  toast.style.fontSize = "14px";
+  toast.style.borderRadius = "8px";
+  toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  toast.style.zIndex = "9999";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.3s ease";
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.style.opacity = "1", 10);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
+}
+
   </script>
   <script src="appkit.bundle.js"></script>
 </body>
