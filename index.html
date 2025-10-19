@@ -1076,10 +1076,10 @@ tokens.forEach(token => {
 
   })();
     function copyAddress(addr) {
-  if (!addr) return showToast("⚠️ Alamat token tidak ditemukan", true);
+  if (!addr) return showToast("⚠️ Token address not found", true);
   navigator.clipboard.writeText(addr)
-    .then(() => showToast("✅ Alamat token berhasil disalin"))
-    .catch(() => showToast("❌ Gagal menyalin alamat token", true));
+    .then(() => showToast("✅ Token address copied to clipboard"))
+    .catch(() => showToast("❌ Failed to copy address", true));
 }
 
 function showToast(message, isError = false) {
