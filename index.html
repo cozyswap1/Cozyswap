@@ -503,25 +503,35 @@
       toDropdown.innerHTML = '';
 
       // Create token options untuk kedua dropdown
-      tokens.forEach(token => {
-        // Untuk FROM dropdown
-        const fromOption = document.createElement('div');
-        fromOption.className = 'token-option';
-        fromOption.innerHTML = `
-          <img src="${token.logoURI || getDefaultLogo(token.symbol)}" 
-               alt="${token.symbol}" 
-               class="token-logo-sm"
-               onerror="this.src='${getDefaultLogo(token.symbol)}'">
-          <div class="token-info">
-            <span class="token-symbol">${token.symbol}</span>
-            <span class="token-name">${token.name || token.symbol} Token</span>
-          </div>
-        `;
-        fromOption.onclick = (e) => {
-          e.stopPropagation();
-          selectToken('from', token);
-        };
-        fromDropdown.appendChild(fromOption);
+tokens.forEach(token => {
+  // Untuk FROM dropdown
+  const fromOption = document.createElement('div');
+  fromOption.className = 'token-option';
+  fromOption.innerHTML = `
+    <img src="${token.logoURI || getDefaultLogo(token.symbol)}" 
+         alt="${token.symbol}" 
+         class="token-logo-sm"
+         onerror="this.src='${getDefaultLogo(token.symbol)}'">
+    <div class="token-info">
+      <span class="token-symbol">${token.symbol}</span>
+      <span class="token-name">${token.name || token.symbol} Token</span>
+    </div>
+    <button class="copy-btn" title="Salin alamat token" onclick="event.stopPropagation(); copyAddress('${token.address}')">📋</button>
+  `;
+  fromOption.onclick = (e) => {
+    e.stopPropagation();
+    selectToken('from', token);
+  };
+  fromDropdown.appendChild(fromOption);
+
+  // Untuk TO dropdown
+  const toOption = fromOption.cloneNode(true);
+  toOption.onclick = (e) => {
+    e.stopPropagation();
+    selectToken('to', token);
+  };
+  toDropdown.appendChild(toOption);
+});
 
         // Untuk TO dropdown
         const toOption = document.createElement('div');
