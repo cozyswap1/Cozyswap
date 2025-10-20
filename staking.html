@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CozySwap Staking</title>
+  <link rel="icon" href="https://photos.pinksale.finance/file/pinksale-logo-upload/1760207026339-3c980e075709984d5362d951f45695a5.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.1/ethers.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --card:#15151c;
+      --panel:#1d1d25;
+      --accent1: #a24bff;
+      --accent2: #7bd1ff;
+      --muted:#bfb9d9;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#06060a 0%, var(--bg) 100%);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:980px;
+    }
+
+    header{
+      display:flex; align-items:center; gap:12px;
+      background:linear-gradient(90deg,var(--accent1), #ff66c4);
+      padding:10px 18px; border-radius:12px;
+      box-shadow: 0 8px 30px rgba(160,50,255,0.12);
+      margin-bottom:18px;
+    }
+    header img{ height:42px; width:42px; border-radius:8px; }
+    header .title{ font-weight:700; font-size:1.25rem; letter-spacing:0.2px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+    }
+
+    @media(min-width:880px){
+      .grid{ grid-template-columns: 430px 1fr; align-items:start; }
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    .wallet-row{ display:flex; gap:10px; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .btn{
+      background: linear-gradient(90deg,var(--accent1), #ff66c4);
+      border: none; color:white; padding:10px 12px; border-radius:10px; cursor:pointer;
+      font-weight:600;
+    }
+    .small{ font-size:0.86rem; color:var(--muted); }
+
+    .balances{
+      background:var(--panel);
+      border-radius:10px;
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .two-col{
+      display:flex; gap:12px; justify-content:space-between; align-items:center;
+    }
+    .two-col .col{ flex:1; }
+
+    .balance-item{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:6px 8px; border-radius:8px; background:var(--glass);
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    label{ display:block; margin-top:10px; font-size:0.92rem; color:var(--muted); }
+    select,input[type=number]{
+      width:100%; padding:10px 12px; border-radius:10px; border:none; background:#111;
+      color:#fff; margin-top:6px;
+    }
+
+    .actions{ display:flex; gap:10px; margin-top:12px; flex-direction:column; }
+    @media(min-width:520px){ .actions{ flex-direction:row; } }
+
+    .est{
+      margin-top:8px; color:#e8d7ff; font-weight:700;
+      background:linear-gradient(90deg, rgba(162,75,255,0.08), rgba(123,209,255,0.04));
+      padding:8px 10px; border-radius:8px; font-size:0.95rem;
+    }
+
+    .global-card{
+      background:linear-gradient(180deg, rgba(122,0,255,0.06), rgba(0,0,0,0.06));
+      border-radius:12px; padding:12px; text-align:center;
+    }
+
+    footer{ text-align:center; margin-top:18px; color:var(--muted); font-size:0.88rem; }
+
+    /* responsive small tweaks */
+    @media(max-width:420px){
+      header .title{ font-size:1rem; }
+      .card{ padding:12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="https://photos.pinksale.finance/file/pinksale-logo-upload/1760207026339-3c980e075709984d5362d951f45695a5.png" alt="CozySwap Logo" />
+      <div class="title">CozySwap Staking</div>
+    </header>
+
+    <div class="grid">
+      <!-- left: controls & user balances -->
+      <div class="card">
+        <div class="wallet-row">
+          <div>
+            <button id="connectBtn" class="btn">🔗 Connect Wallet</button>
+            <div id="walletAddress" class="small" style="margin-top:8px">Not connected</div>
+          </div>
+          <div style="text-align:right">
+            <div id="networkStatus" class="small">Network: -</div>
+          </div>
+        </div>
+
+        <div class="balances" style="margin-top:12px">
+          <div class="balance-item">
+            <div class="small">🪙 XPL Balance</div>
+            <div class="mono" id="xplBal">-</div>
+          </div>
+          <div class="balance-item">
+            <div class="small">🌸 COZY Balance</div>
+            <div class="mono" id="cozyBal">-</div>
+          </div>
+
+          <div style="height:6px"></div>
+
+          <div class="balance-item">
+            <div class="small">📊 Your Stake XPL</div>
+            <div class="mono" id="stakeXPL">-</div>
+          </div>
+          <div class="balance-item">
+            <div class="small">📊 Your Stake COZY</div>
+            <div class="mono" id="stakeCOZY">-</div>
+          </div>
+
+          <div style="height:6px"></div>
+
+          <div style="text-align:center" class="small">🎁 Pending Reward</div>
+          <div class="balance-item" style="justify-content:center; font-weight:700; color:#ffe48a">
+            <div id="pendingReward">-</div>
+          </div>
+        </div>
+
+        <hr style="border:none; height:10px; background:transparent">
+
+        <label for="pid">Pool</label>
+        <select id="pid">
+          <option value="0">Flexible (100% APY, 30d)</option>
+          <option value="1">2 Month (120%)</option>
+          <option value="2">3 Month (140%)</option>
+          <option value="3">6 Month (170%)</option>
+          <option value="4">12 Month (220%)</option>
+        </select>
+
+        <label for="stakeType">Stake Type</label>
+        <select id="stakeType">
+          <option value="xpl">XPL (native)</option>
+          <option value="cozy">COZY Token</option>
+        </select>
+
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" step="any" placeholder="Enter amount" />
+
+        <div id="minInfo" class="small" style="margin-top:6px;color:var(--muted)"></div>
+        <div id="estReward" class="est" style="display:none"></div>
+
+        <div class="actions">
+          <button id="depositBtn" class="btn">🚀 Deposit</button>
+          <button id="withdrawBtn" class="btn" style="background:linear-gradient(90deg,#66d7ff,#9b6bff)">💸 Withdraw</button>
+          <button id="claimBtn" class="btn" style="background:linear-gradient(90deg,#ffcf66,#ff6bb0)">🎁 Claim</button>
+        </div>
+      </div>
+
+      <!-- right: global stats + instructions -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div>
+            <div style="font-size:1.05rem; font-weight:700">Global Total Stake</div>
+            <div class="small" style="margin-top:6px">Live totals across all pools</div>
+          </div>
+          <img src="https://photos.pinksale.finance/file/pinksale-logo-upload/1760207026339-3c980e075709984d5362d951f45695a5.png" alt="logo" style="height:52px; border-radius:10px" />
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:150px" class="global-card card">
+            <div style="font-size:0.9rem; color:var(--muted)">COZY</div>
+            <div style="font-weight:800; font-size:1.15rem; margin-top:6px" id="totalCozy">-</div>
+          </div>
+          <div style="flex:1; min-width:150px" class="global-card card">
+            <div style="font-size:0.9rem; color:var(--muted)">XPL</div>
+            <div style="font-weight:800; font-size:1.15rem; margin-top:6px" id="totalXpl">-</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px; color:var(--muted); line-height:1.4">
+          <strong>Quick notes</strong>
+          <ul style="padding-left:16px; margin:8px 0 0 0">
+            <li>Min stake: <span id="minNote">1 XPL / 1000 COZY</span></li>
+            <li>Rewards always paid in <strong>COZY</strong></li>
+            <li>1 XPL = 1000 COZY (used for reward estimation)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+   <footer style="background-color:#0d1117; color:#ccc; text-align:center; padding:25px 10px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6;">
+  <div>
+    CozySwap • Powered by Plasma Chain • 
+    <a href="https://x.com/CozySwap" target="_blank" style="color:#58a6ff; text-decoration:none;">@CozySwap</a>
+  </div>
+  <div style="margin-top:8px;">
+    © 2025 CozySwap &nbsp;|&nbsp;
+    <a href="terms.html" style="color:#58a6ff; text-decoration:none;">Terms of Use</a> &nbsp;|&nbsp;
+    <a href="disclaimer.html" style="color:#58a6ff; text-decoration:none;">Disclaimer</a> &nbsp;|&nbsp;
+    <a href="privacy.html" style="color:#58a6ff; text-decoration:none;">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+/* ===========================
+   Config (change only if needed)
+   =========================== */
+const STAKING_ADDR = "0xE2b6fa50ceCec5705c63a5E998A3678fB6eA169e";
+const COZY_ADDR = "0x06e2ef46662834f4e42dbf9ff9222b077c57df5c";
+const RPC_CHAIN_ID = 9745;
+const POOLS = {
+  0: { apy: 100, months: 1 },
+  1: { apy: 120, months: 2 },
+  2: { apy: 140, months: 3 },
+  3: { apy: 170, months: 6 },
+  4: { apy: 220, months: 12 },
+};
+const XPL_TO_COZY = 1000; // 1 XPL = 1000 COZY (estimation)
+
+/* ===========================
+   Minimal ABIs
+   =========================== */
+const STAKING_ABI = [
+  "function deposit(uint256 pid,uint256 cozyAmount) payable",
+  "function withdraw(uint256 pid,uint256 amountPrincipal)",
+  "function claim(uint256 pid)",
+  "function pendingRewardView(uint256 pid,address user) view returns (uint256)",
+  "function totalStakedCozy() view returns (uint256)",
+  "function totalStakedXpl() view returns (uint256)",
+  "function totalCozyPerWallet(address) view returns (uint256)",
+  "function totalXplPerWallet(address) view returns (uint256)"
+];
+const ERC20_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function allowance(address owner,address spender) view returns (uint256)",
+  "function approve(address spender,uint256 amount) external returns (bool)",
+  "function decimals() view returns (uint8)"
+];
+
+/* ===========================
+   State
+   =========================== */
+let provider, signer, signerAddress;
+let stakingContract, cozyContract;
+
+/* ===========================
+   Elements
+   =========================== */
+const connectBtn = document.getElementById('connectBtn');
+const walletAddressEl = document.getElementById('walletAddress');
+const networkStatusEl = document.getElementById('networkStatus');
+
+const xplBalEl = document.getElementById('xplBal');
+const cozyBalEl = document.getElementById('cozyBal');
+const stakeXplEl = document.getElementById('stakeXPL');
+const stakeCozyEl = document.getElementById('stakeCOZY');
+const pendingEl = document.getElementById('pendingReward');
+
+const pidEl = document.getElementById('pid');
+const stakeTypeEl = document.getElementById('stakeType');
+const amountEl = document.getElementById('amount');
+const minInfoEl = document.getElementById('minInfo');
+const estRewardEl = document.getElementById('estReward');
+
+const depositBtn = document.getElementById('depositBtn');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const claimBtn = document.getElementById('claimBtn');
+
+const totalCozyEl = document.getElementById('totalCozy');
+const totalXplEl = document.getElementById('totalXpl');
+
+/* ===========================
+   Helpers
+   =========================== */
+function short(addr){
+  if(!addr) return '';
+  return addr.slice(0,6) + '...' + addr.slice(-4);
+}
+function show(msg){ alert(msg); }
+function toBN(nStr){ try { return ethers.BigNumber.from(nStr.toString()); } catch(e){ return ethers.BigNumber.from('0'); } }
+
+/* ===========================
+   Connect / init
+   =========================== */
+async function connectWallet(){
+  if(!window.ethereum) return show("Please install MetaMask or compatible wallet");
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
+  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  signer = provider.getSigner();
+  signerAddress = await signer.getAddress();
+
+  // instantiate contracts
+  stakingContract = new ethers.Contract(STAKING_ADDR, STAKING_ABI, signer);
+  cozyContract = new ethers.Contract(COZY_ADDR, ERC20_ABI, signer);
+
+  walletAddressEl.innerText = short(signerAddress);
+  const network = await provider.getNetwork();
+  networkStatusEl.innerText = `Network: ${network.chainId}`;
+  if(network.chainId !== RPC_CHAIN_ID) {
+    show(`⚠️ Please switch wallet to Plasma Chain (chainId ${RPC_CHAIN_ID})`);
+  }
+
+  // set UI
+  updateMinStake();
+  await refreshAll();
+  // auto refresh
+  setInterval(refreshAll, 6000);
+
+  // auto reload on changes
+  window.ethereum.on('accountsChanged', ()=> location.reload());
+  window.ethereum.on('chainChanged', ()=> location.reload());
+}
+
+/* ===========================
+   Refresh functions
+   =========================== */
+async function refreshAll(){
+  try {
+    await refreshBalancesAndStakes();
+    await refreshGlobalTotals();
+    await refreshPendingAll();
+  } catch(e){
+    console.error("refreshAll error", e);
+  }
+}
+
+async function refreshBalancesAndStakes(){
+  if(!provider || !signerAddress) return;
+
+  // XPL native balance
+  const xplBal = await provider.getBalance(signerAddress);
+  xplBalEl.innerText = parseFloat(ethers.utils.formatEther(xplBal)).toFixed(4);
+
+  // cozy token balance
+  try{
+    const cozyBal = await cozyContract.balanceOf(signerAddress);
+    cozyBalEl.innerText = parseFloat(ethers.utils.formatUnits(cozyBal,18)).toFixed(4);
+  }catch(e){
+    cozyBalEl.innerText = '-';
+  }
+
+  // total stake per wallet (from contract getters)
+  try{
+    const stCozy = await stakingContract.totalCozyPerWallet(signerAddress);
+    const stXpl = await stakingContract.totalXplPerWallet(signerAddress);
+    stakeCozyEl.innerText = parseFloat(ethers.utils.formatUnits(stCozy,18)).toFixed(4);
+    stakeXplEl.innerText = parseFloat(ethers.utils.formatEther(stXpl)).toFixed(4);
+  }catch(e){
+    // fallback: show dash
+    stakeCozyEl.innerText = '-';
+    stakeXplEl.innerText = '-';
+  }
+}
+
+async function refreshGlobalTotals(){
+  if(!stakingContract) return;
+  try{
+    const gCozy = await stakingContract.totalStakedCozy();
+    const gXpl = await stakingContract.totalStakedXpl();
+    totalCozyEl.innerText = parseFloat(ethers.utils.formatUnits(gCozy,18)).toLocaleString(undefined, {maximumFractionDigits:2});
+    totalXplEl.innerText = parseFloat(ethers.utils.formatEther(gXpl)).toLocaleString(undefined, {maximumFractionDigits:4});
+  }catch(e){
+    totalCozyEl.innerText = '-';
+    totalXplEl.innerText = '-';
+  }
+}
+
+async function refreshPendingAll(){
+  if(!stakingContract || !signerAddress) return;
+  try{
+    let totalPending = ethers.BigNumber.from('0');
+    for(let i=0;i<=4;i++){
+      try{
+        const p = await stakingContract.pendingRewardView(i, signerAddress);
+        totalPending = totalPending.add(p);
+      }catch(e){ /* ignore per-pid missing */ }
+    }
+    pendingEl.innerText = parseFloat(ethers.utils.formatUnits(totalPending,18)).toFixed(4);
+  }catch(e){
+    pendingEl.innerText = '-';
+  }
+}
+
+/* ===========================
+   Estimation & min stake
+   =========================== */
+function updateMinStake(){
+  const type = stakeTypeEl.value;
+  if(type === 'xpl'){
+    minInfoEl.innerText = "🔹 Minimum stake: 1 XPL";
+    document.getElementById('minNote').innerText = "1 XPL / 1000 COZY";
+  } else {
+    minInfoEl.innerText = "🔹 Minimum stake: 1000 COZY";
+    document.getElementById('minNote').innerText = "1 XPL / 1000 COZY";
+  }
+  updateEstimate();
+}
+
+function updateEstimate(){
+  const pid = pidEl.value;
+  const type = stakeTypeEl.value;
+  const val = parseFloat(amountEl.value || 0);
+  if(!val || val <= 0){
+    estRewardEl.style.display='none';
+    estRewardEl.innerText='';
+    return;
+  }
+  const pool = POOLS[pid];
+  let stakeInCozy = (type === 'xpl') ? val * XPL_TO_COZY : val;
+  const reward = stakeInCozy * (pool.apy/100) * (pool.months/12);
+  estRewardEl.style.display='block';
+  estRewardEl.innerText = `💰 Estimated Reward: ${Number(reward).toLocaleString(undefined,{maximumFractionDigits:2})} COZY`;
+}
+
+/* ===========================
+   Actions (deposit / withdraw / claim)
+   =========================== */
+async function doDeposit(){
+  if(!signer) return show("Connect wallet first");
+  const pid = Number(pidEl.value);
+  const type = stakeTypeEl.value;
+  const amtStr = amountEl.value;
+  if(!amtStr || Number(amtStr) <= 0) return show("Enter valid amount");
+  if(type === 'xpl'){
+    const val = Number(amtStr);
+    if(val < 1) return show("Minimum stake for XPL is 1");
+    const wei = ethers.utils.parseEther(val.toString());
+    try{
+      const tx = await stakingContract.deposit(pid, 0, { value: wei });
+      await tx.wait();
+      show("✅ Deposit XPL success");
+      await refreshAll();
+    }catch(e){ console.error(e); show(parseRevert(e)); }
+  } else {
+    const val = Number(amtStr);
+    if(val < 1000) return show("Minimum stake for COZY is 1000");
+    const amountWei = ethers.utils.parseUnits(val.toString(),18);
+    try{
+      const allowance = await cozyContract.allowance(signerAddress, STAKING_ADDR);
+      if(ethers.BigNumber.from(allowance).lt(amountWei)){
+        const tx1 = await cozyContract.approve(STAKING_ADDR, ethers.constants.MaxUint256);
+        await tx1.wait();
+      }
+      const tx2 = await stakingContract.deposit(pid, amountWei);
+      await tx2.wait();
+      show("✅ Deposit COZY success");
+      await refreshAll();
+    }catch(e){ console.error(e); show(parseRevert(e)); }
+  }
+}
+
+async function doWithdraw(){
+  if(!signer) return show("Connect wallet first");
+  const pid = Number(pidEl.value);
+  const type = stakeTypeEl.value;
+  const amtStr = amountEl.value;
+  if(!amtStr || Number(amtStr) <= 0) return show("Enter valid amount");
+  try{
+    let tx;
+    if(type === 'xpl'){
+      const wei = ethers.utils.parseEther(amtStr);
+      tx = await stakingContract.withdraw(pid, wei);
+    } else {
+      const wei = ethers.utils.parseUnits(amtStr,18);
+      tx = await stakingContract.withdraw(pid, wei);
+    }
+    await tx.wait();
+    show("✅ Withdraw done");
+    await refreshAll();
+  }catch(e){ console.error(e); show(parseRevert(e)); }
+}
+
+async function doClaim(){
+  if(!signer) return show("Connect wallet first");
+  const pid = Number(pidEl.value);
+  try{
+    const tx = await stakingContract.claim(pid);
+    await tx.wait();
+    show("🎉 Claim successful");
+    await refreshAll();
+  }catch(e){ console.error(e); show(parseRevert(e)); }
+}
+
+/* ===========================
+   Utilities
+   =========================== */
+function parseRevert(err){
+  try{
+    if(err && err.error && err.error.message) return err.error.message;
+    if(err && err.data && err.data.message) return err.data.message;
+    if(err && err.message) return err.message;
+    return "Transaction failed or rejected";
+  }catch(e){ return "Error"; }
+}
+
+/* ===========================
+   Bind events
+   =========================== */
+connectBtn.onclick = connectWallet;
+depositBtn.onclick = doDeposit;
+withdrawBtn.onclick = doWithdraw;
+claimBtn.onclick = doClaim;
+stakeTypeEl.onchange = updateMinStake;
+pidEl.onchange = updateEstimate;
+amountEl.oninput = updateEstimate;
+
+/* ===========================
+   Auto-run if wallet already connected (optional)
+   =========================== */
+(async function autoConnectIfPossible(){
+  if(window.ethereum && window.ethereum.selectedAddress){
+    // try to auto connect silently
+    try{
+      provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      signer = provider.getSigner();
+      signerAddress = await signer.getAddress();
+      if(signerAddress){
+        stakingContract = new ethers.Contract(STAKING_ADDR, STAKING_ABI, signer);
+        cozyContract = new ethers.Contract(COZY_ADDR, ERC20_ABI, signer);
+        walletAddressEl.innerText = short(signerAddress);
+        const network = await provider.getNetwork();
+        networkStatusEl.innerText = `Network: ${network.chainId}`;
+        updateMinStake();
+        await refreshAll();
+        setInterval(refreshAll, 6000);
+      }
+    }catch(e){ /* ignore */ }
+  }
+})();
+</script>
+</body>
+</html>
