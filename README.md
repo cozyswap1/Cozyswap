@@ -5,7 +5,7 @@
 **CozySwap** is a decentralized exchange (DEX) built on **Plasma Chain (Chain ID: 9745)**.  
 It allows users to **swap tokens instantly**, **add liquidity**, and **earn rewards** in **COZY Token** — all through a simple, lightweight, and fast HTML interface.
 
-🌐 **Live App:** [https://cozyswap1.github.io/Cozyswap/](https://cozyswap1.github.io/Cozyswap/)  
+🌐 **Live App:** [https://cozyswap.netlify.app](https://cozyswap1.github.io/Cozyswap/)  
 📄 **License:** MIT  
 📬 **Contact:** [cozyswap2@gmail.com](mailto:cozyswap2@gmail.com)  
 🔐 **Security Policy:** [security.txt](https://cozyswap1.github.io/Cozyswap/security.txt)  
@@ -98,7 +98,7 @@ This project is licensed under the **MIT License** — you are free to use, modi
 
 Stay connected and follow our updates:
 
-🐦 **X (Twitter):** [https://x.com/CozySwap](https://x.com/CozySwap)  
+🐦 **X (Twitter):** [https://x.com/CozySwapDex](https://x.com/CozySwapDex)  
 💬 **Telegram:** [https://t.me/CozySwap](https://t.me/CozySwap)  
 🧑‍💻 **GitHub:** [https://github.com/cozyswap1](https://github.com/cozyswap1)
 
