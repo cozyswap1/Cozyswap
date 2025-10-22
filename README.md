@@ -9,7 +9,7 @@ It allows users to **swap tokens instantly**, **add liquidity**, and **earn rewa
 📄 **License:** MIT  
 📬 **Contact:** [cozyswap2@gmail.com](mailto:cozyswap2@gmail.com)  
 🔐 **Security Policy:** [security.txt](https://cozyswap1.github.io/Cozyswap/security.txt)  
-📘 **Whitepaper:** [https://bit.ly/CozySwap_Whitepaper](https://bit.ly/CozySwap_Whitepaper)
+📘 **Whitepaper:** [https://bit.ly/CozySwap_Whitepaper](https://cozyswap.net/Whitepaper)
 
 ---
 
@@ -98,8 +98,8 @@ This project is licensed under the **MIT License** — you are free to use, modi
 
 Stay connected and follow our updates:
 
-🐦 **X (Twitter):** [https://x.com/CozySwapDex](https://x.com/CozySwapDex)  
-💬 **Telegram:** [https://t.me/CozySwap](https://t.me/CozySwap)  
+🐦 **X (Twitter):** [https://x.com/CozySwap_net](https://x.com/CozySwap_net)  
+💬 **Telegram:** [https://t.me/CozySwap](https://t.me/CozySwap_net)  
 🧑‍💻 **GitHub:** [https://github.com/cozyswap1](https://github.com/cozyswap1)
 
 ---
